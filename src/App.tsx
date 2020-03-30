@@ -1,26 +1,45 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {connect} from "react-redux";
+import RoundInfo from "./components/RoundInfo";
+import BattleField from "./components/BattleField";
+import {RootState} from "./redux/reducers/reducers";
+import {startGame, motion} from "./redux/actions/fieldAction";
+import {Team} from "./ts/BattleField/Team";
+import {Character} from "./ts/Character/Character";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface Props {
+    characters: Character[];
+    currentTeam: Team;
+    startGame: () => any;
+    moveOrderFirstTeam: Character[],
+    moveOrderSecondTeam: Character[]
 }
 
-export default App;
+class App extends React.Component<Props>{
+    componentDidMount(): void {
+        console.log('lol123');
+        this.props.startGame();
+    }
+
+    render() {
+        return (
+            <div className="app">
+                <RoundInfo moveOrderFirstTeam={this.props.moveOrderFirstTeam}
+                           moveOrderSecondTeam={this.props.moveOrderSecondTeam}
+                           currentTeam={this.props.currentTeam}
+                />
+                <BattleField characters={this.props.characters} />
+            </div>
+        );
+    }
+}
+
+const mapStateToProps = (state: RootState) => ({
+    characters: state.fieldReducer.characters,
+    currentTeam: state.fieldReducer.currentTeam,
+    moveOrderFirstTeam: state.fieldReducer.moveOrderFirstTeam,
+    moveOrderSecondTeam: state.fieldReducer.moveOrderSecondTeam
+});
+
+export default connect(mapStateToProps, {startGame, motion})(App);
