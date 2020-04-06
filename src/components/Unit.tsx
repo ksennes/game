@@ -1,22 +1,31 @@
 import React from "react";
+import {connect} from "react-redux";
+import {characterAction} from "../redux/actions/fieldAction";
+import {Character} from "../model/Character/Character";
 
 interface Props {
-    name: string,
-    hp: number,
-    icon: string,
-    style: {border: string} | {}
+    character: Character;
+    activeCharacter: Character;
+    style: { border: string } | {};
+    characterAction: (character: Character, target: Character)=> any;
 }
 
-const Unit = (props: Props) => {
-    return (
-        <div className='unit' style={props.style}>
-            <img src={props.icon} alt={props.name}/>
-            <div className='unit-text'>
-                <h3>{props.name}</h3>
-                <span>HP - {props.hp}</span>
-            </div>
-        </div>
-    )
-};
+class Unit extends React.Component<Props> {
+    handleClick = () => {
+        this.props.characterAction(this.props.activeCharacter, this.props.character);
+    };
 
-export default Unit;
+    render() {
+        return (
+            <div className='unit' style={this.props.style} onClick={this.handleClick}>
+                <img src={this.props.character.isDead? this.props.character.deadIcon :this.props.character.icon} alt={this.props.character.name}/>
+                <div className='unit-text'>
+                    <h3>{this.props.character.name}</h3>
+                    <span>HP: {this.props.character.hp}</span>
+                </div>
+            </div>
+        )
+    }
+}
+
+export default connect(undefined, {characterAction})(Unit);

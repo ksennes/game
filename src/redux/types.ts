@@ -1,9 +1,7 @@
-import {Team} from "../ts/BattleField/Team";
-import {Character} from "../ts/Character/Character";
+import {Character} from "../model/Character/Character";
 
 export interface FieldState {
     characters: Character[];
-    currentTeam: Team,
-    moveOrderFirstTeam: Character[],
-    moveOrderSecondTeam: Character[]
+    activeCharacter: Character;
+    targets: Character[];
 }

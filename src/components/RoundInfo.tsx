@@ -1,38 +1,40 @@
 import React from "react";
-import {Character} from "../ts/Character/Character";
-import {Team} from "../ts/BattleField/Team";
+import {Character} from "../model/Character/Character";
+import {Team} from "../model/BattleField/Team";
+
 let Loader = require('react-loaders').Loader;
 
 interface Props {
-    currentTeam: Team;
-    moveOrderFirstTeam: Character[],
-    moveOrderSecondTeam: Character[]
+    characters: Character[];
+    activeCharacter: Character;
 }
 
 const RoundInfo = (props: Props) => {
-    if (props.currentTeam === undefined) {
+    const{characters, activeCharacter} = props;
+
+    if (characters.length === 0) {
         return <Loader type='ball-pulse'/>
     }
 
-    console.log(props);
+    const style = {
+        border: '2px solid #008110',
+        boxShadow: '0px 0px 10px 5px rgba(0,129,15,1)'
+    };
 
-    if(props.currentTeam===0) return (
+   return (
         <div className='round-info'>
-            <span style={{color: 'white'}}>Current team: yellow</span>
             <br/>
             {
-                props.moveOrderFirstTeam.map(item => <div className='query'>{item.name}</div>)
+                characters
+                    .slice()
+                    .sort((a,b) => b.initiative - a.initiative)
+                    .map(item => {
+                        if(item.team === Team.firstTeam) return <div className='query yellow-team' style={item===activeCharacter? style : undefined}>{item.name}</div>;
+                        if(item.team === Team.secondTeam) return <div className='query purple-team' style={item===activeCharacter? style : undefined}>{item.name}</div>;
+                    })
             }
         </div>
-    ); else return (
-        <div className='round-info'>
-            <span style={{color: 'white'}}>Current team: blue</span>
-            <br/>
-            {
-                props.moveOrderSecondTeam.map(item => <div className='query'>{item.name}</div>)
-            }
-        </div>
-    )
+    );
 };
 
 export default RoundInfo;

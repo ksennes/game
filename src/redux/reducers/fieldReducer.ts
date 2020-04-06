@@ -1,29 +1,36 @@
-import {ActionType} from "typesafe-actions";
-import {Team} from "../../ts/BattleField/Team";
 import {FieldState} from "../types";
-import * as fieldAction from '../actions/fieldAction';
-
-export type FieldAction = ActionType<typeof fieldAction>;
+import {ActionTypes} from "../actions/fieldAction";
+import {CharacterFactory} from "../../model/Character/CharactersFactory";
 
 const initialState: FieldState = {
     characters: [],
-    currentTeam: Team.firstTeam,
-    moveOrderFirstTeam: [],
-    moveOrderSecondTeam: []
+    activeCharacter: CharacterFactory.getCharacter('Skeleton'),
+    targets: []
 };
 
-export const fieldReducer = (state: FieldState = initialState, action: FieldAction) => {
+export const fieldReducer = (state: FieldState = initialState, action: ActionTypes) => {
     switch (action.type) {
-        case 'START_GAME':
+        case 'CREATE_FIELD':
             return {
                 ...state,
                 characters: action.payload.characters,
-                currentTeam: action.payload.currentTeam,
-                moveOrderFirstTeam: action.payload.moveOrderFirstTeam,
-                moveOrderSecondTeam: action.payload.moveOrderSecondTeam
+                activeCharacter: action.payload.activeCharacter,
+                targets: action.payload.targets
             };
-        case 'MOTION':
-            return state;
+        case 'UNIT_DEFENCE':
+            return {
+                ...state,
+                characters: action.payload.characters,
+                activeCharacter: action.payload.activeCharacter,
+                targets: action.payload.targets
+            };
+        case 'UNIT_ACTION':
+            return {
+                ...state,
+                characters: action.payload.characters,
+                activeCharacter: action.payload.activeCharacter,
+                targets: action.payload.targets
+            };
         default:
             return state;
     }

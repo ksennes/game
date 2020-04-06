@@ -4,32 +4,39 @@ import {connect} from "react-redux";
 import RoundInfo from "./components/RoundInfo";
 import BattleField from "./components/BattleField";
 import {RootState} from "./redux/reducers/reducers";
-import {startGame, motion} from "./redux/actions/fieldAction";
-import {Team} from "./ts/BattleField/Team";
-import {Character} from "./ts/Character/Character";
+import {startAction, defenceAction} from "./redux/actions/fieldAction";
+import {Character} from "./model/Character/Character";
 
 interface Props {
     characters: Character[];
-    currentTeam: Team;
-    startGame: () => any;
-    moveOrderFirstTeam: Character[],
-    moveOrderSecondTeam: Character[]
+    activeCharacter: Character;
+    targets: Character[]
+    startAction: () => any;
+    defenceAction: (character: Character) => any;
 }
 
 class App extends React.Component<Props>{
     componentDidMount(): void {
-        console.log('lol123');
-        this.props.startGame();
+        this.props.startAction();
     }
+
+    handleClick = () => {
+        this.props.defenceAction(this.props.activeCharacter);
+    };
 
     render() {
         return (
             <div className="app">
-                <RoundInfo moveOrderFirstTeam={this.props.moveOrderFirstTeam}
-                           moveOrderSecondTeam={this.props.moveOrderSecondTeam}
-                           currentTeam={this.props.currentTeam}
+                <RoundInfo characters={this.props.characters}
+                           activeCharacter={this.props.activeCharacter}
                 />
-                <BattleField characters={this.props.characters} />
+
+                <button onClick={this.handleClick}>Defence</button>
+
+                <BattleField characters={this.props.characters}
+                             activeCharacter={this.props.activeCharacter}
+                             targets={this.props.targets}
+                />
             </div>
         );
     }
@@ -37,9 +44,8 @@ class App extends React.Component<Props>{
 
 const mapStateToProps = (state: RootState) => ({
     characters: state.fieldReducer.characters,
-    currentTeam: state.fieldReducer.currentTeam,
-    moveOrderFirstTeam: state.fieldReducer.moveOrderFirstTeam,
-    moveOrderSecondTeam: state.fieldReducer.moveOrderSecondTeam
+    activeCharacter: state.fieldReducer.activeCharacter,
+    targets: state.fieldReducer.targets
 });
 
-export default connect(mapStateToProps, {startGame, motion})(App);
+export default connect(mapStateToProps, {startAction, defenceAction})(App);

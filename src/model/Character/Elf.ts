@@ -3,6 +3,7 @@ import {DamageAction} from "../ActionBehavior/DamageAction";
 import {RangeTarget} from "../TargetBehavior/RangeTarget";
 import {TargetBehavior} from "../TargetBehavior/TargetBehavior";
 import {ActionBehavior} from "../ActionBehavior/ActionBehavior";
+import {Team} from "../BattleField/Team";
 
 export class Elf implements Character{
     name: string;
@@ -10,38 +11,64 @@ export class Elf implements Character{
     initiative: number;
     damage: number;
     icon: string;
+    deadIcon: string;
 
-    isActive: boolean;
+    team: Team | null;
+
     isParalyzed: boolean;
     isDefence: boolean;
+    isDead: boolean;
 
-    x: number | null;
-    y: number | null;
+    x: number;
+    y: number;
 
     actionBehavior: ActionBehavior;
     targetBehavior: TargetBehavior;
 
     constructor() {
-        this.damage = 40;
+        this.name = 'Elf';
         this.hp = 90;
         this.initiative = 60;
-        this.isActive = false;
+        this.damage = 40;
+        this.icon = '../../img/elf-active.png';
+        this.deadIcon = '../../img/elf.png';
+
+        this.team = null;
+
         this.isParalyzed = false;
         this.isDefence = false;
-        this.name = 'Elf';
-        this.icon = '../../img/elf-active.png';
+        this.isDead = false;
+
+        this.x = 0;
+        this.y = 0;
+
         this.actionBehavior = new DamageAction();
         this.targetBehavior = new RangeTarget();
-        this.x = null;
-        this.y = null;
+    }
+
+    dead(): void {
+        this.isDead = true;
+        this.hp = 0;
     }
 
     defence(): void {
         this.isDefence = true;
     }
 
+    performGetTarget(battleField: Character[], character: Character): Character[] {
+        return this.targetBehavior.getTargets(battleField, character);
+    }
+
+    doAction(character: Character, battleField?: Character[]): void {
+        this.actionBehavior.action(this, character);
+    }
+
     setCoordinates(x: number, y: number): void {
         this.x = x;
         this.y = y;
+    }
+
+    setTeam(team: Team): void {
+        this.team = team;
     }
 }

@@ -50,7 +50,7 @@
 
 .unit {
     padding: 5px 10px;
-    margin: 5px 30px;
+    margin: 15px 50px;
     width: 150px;
     text-align: center;
 }
@@ -58,6 +58,10 @@
 .unit img {
     max-height: 80px;
     position: relative;
+}
+
+.unit:hover {
+    cursor: pointer;
 }
 
 .active {
@@ -75,14 +79,36 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: black;
+    background-color: rgb(0, 0, 0);
 }
 
 .query {
-    width: 90px;
+    width: 130px;
     height: 40px;
     background-color: white;
     text-align: center;
+    font-weight: bold;
+    line-height: 40px;
     border-radius: 1px;
     margin-bottom: 20px;
+}
+
+.yellow-team {
+    background-color: rgb(255, 232, 115);
+}
+
+.purple-team {
+    background-color: rgb(138, 110, 215);
+}
+
+.app button {
+    position: absolute;
+    top: 365px;
+    left: 225px;
+    width: 150px;
+    height: 50px;
+    background-color: #282c34;
+    border: 1px solid #282c34;
+    color: white;
+    font-size: 20px;
 }
